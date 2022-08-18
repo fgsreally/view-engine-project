@@ -1,10 +1,9 @@
 {
   "name": "@fgsreally/view-engine-project",
-  "private": true,
   "version": "1.0.0",
   "scripts": {
     "build": "pnpm --filter=@fgsreally/core run build",
-    "publish": "pnpm --filter=@fgsreally/core run publish",
+    "publish": "pnpm --filter=@fgsreally/core run publish"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
