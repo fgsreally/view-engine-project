@@ -26,9 +26,16 @@ export class Engine<
   containerState: UnwrapNestedRefs<ContainerState>;
   dataStack: DataState[] = [];
   history: any[] = [];
+  isFixed: boolean = false;
   historyLength: number;
-  constructor(data: DataState, config: EngineConfig = {}) {
+  error: Function;
+  constructor(
+    data: DataState,
+    config: EngineConfig = {},
+    error: Function = (msg: string) => console.error(msg)
+  ) {
     // super(config);
+    this.error = error;
     this.actState = reactive<any>({
       ...{
         clickBlock: null,
@@ -55,6 +62,12 @@ export class Engine<
     this.blockMap = new Map();
     this.blockMap.set("1", this.source.value as any);
     this.historyLength = config.historyLength || 10;
+  }
+  fixed() {
+    this.isFixed = true;
+  }
+  unfixed() {
+    this.isFixed = false;
   }
   record(historyData: any, data?: DataState) {
     if (data && this.dataStack.length < this.historyLength) {
@@ -116,6 +129,10 @@ export class Engine<
   }
 
   $insert(Block: inputBlock<BlockType>, actObj: keyof ActState = "clickBlock") {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     (Block as any).parent = (this.actState as any)[actObj];
     (this.actState as any)[actObj]?.blocks.push(Block);
   }
@@ -124,6 +141,10 @@ export class Engine<
     Block: inputBlock<BlockType>,
     actObj: keyof ActState = "clickBlock"
   ) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     let curBlock = (this.actState as any)[actObj];
     if (curBlock) {
       (Block as any).parent = curBlock.parent;
@@ -137,11 +158,19 @@ export class Engine<
     }
   }
   $remove(id: string, actObj: keyof ActState = "clickBlock") {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     (this.actState as any)[actObj].blocks = (this.actState as any)[
       actObj
     ].blocks.filter((block: BlockType) => id !== block.uuid);
   }
   $removeAll(id: string[], actObj: keyof ActState = "clickBlock") {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     (this.actState as any)[actObj].blocks = (this.actState as any)[
       actObj
     ].blocks.filter((block: BlockType) => !id.includes(block.uuid));
@@ -172,6 +201,10 @@ export class Engine<
     _.set((this.containerState as any).containerObj, key, property);
   }
   load(data: DataState) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     //for json storage
     // this._initTraverse(data);
     (this.source as any).value = data;
@@ -200,6 +233,10 @@ export class Engine<
     Block: inputBlock<BlockType> | inputBlock<BlockType>[],
     BlockOrID?: string | BlockType
   ) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     if (Array.isArray(Block)) {
       Block.forEach((block) => {
         this.add(block, BlockOrID);
@@ -250,6 +287,10 @@ export class Engine<
     BlockOrID: string | BlockType,
     type: "before" | "after"
   ) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     let keyBlock = this.find(BlockOrID);
     if (!keyBlock) return false;
     let parent = this.blockMap.get((keyBlock as BlockType).parent);
@@ -315,6 +356,10 @@ export class Engine<
     });
   }
   remove(BlockOrID: string | BlockType) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     let Block = this.find(BlockOrID) as BlockType;
     if (Block) {
       let parent = this.find(Block.parent) as any;
@@ -328,11 +373,11 @@ export class Engine<
           this.data
         );
 
-        this.traverse(Block, (block:BlockType) => {
+        this.traverse(Block, (block: BlockType) => {
           this.blockMap.delete(block.uuid);
         });
         let uuid = Block.uuid;
-        parent.blocks = parent.blocks.filter((block:BlockType) => {
+        parent.blocks = parent.blocks.filter((block: BlockType) => {
           return block.uuid !== uuid;
         });
         this.blockMap.delete(Block.uuid);
@@ -341,6 +386,10 @@ export class Engine<
   }
 
   removeAll(BlockOrID: string | BlockType) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     let parentBlock = this.find(BlockOrID);
 
     if (parentBlock) {
@@ -365,6 +414,10 @@ export class Engine<
     BlockOrID1: string | BlockType,
     BlockOrID2: string | BlockType | inputBlock<BlockType>
   ) {
+    if (this.isFixed) {
+      this.error("it has been fixed");
+      return;
+    }
     let Block1 = this.find(BlockOrID1);
     let Block2 = this.find(BlockOrID2 as any);
     if (!Block1) return false;

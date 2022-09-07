@@ -1,0 +1,16 @@
+{
+  "schema": {
+    "new": { "type": "object", "properties": { "a": { "type": "string" } } }
+  },
+  "keywords": [
+    "middlewares",
+    "find",
+    "findOne",
+    "delete",
+    "update",
+    "create",
+    "isJson"
+  ],
+  "formats": [],
+  "category": ["string"]
+}

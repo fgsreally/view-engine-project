@@ -1,5 +1,5 @@
 {
-  "name": "@fgsreally/view-engine-helper",
+  "name": "@view-engine/helper",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

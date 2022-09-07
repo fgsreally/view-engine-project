@@ -3,7 +3,7 @@ import { lineData, pointData } from "../types/types";
 
 export class Line {
   lineMap: Map<string, lineData>;
-  binding: (nodeID: string) => pointData | false | undefined;
+  binding: (id: string) => pointData | false | undefined;
   drawLine: (start: pointData, end: pointData) => void;
   canvas: HTMLCanvasElement;
   isDrawing: boolean;
@@ -11,7 +11,7 @@ export class Line {
     this.lineMap = new Map();
     this.isDrawing = false;
   }
-  setBinding(cb: (nodeID: string) => pointData | false | undefined) {
+  setBinding(cb: (id: string) => pointData | false | undefined) {
     this.binding = cb;
     return this;
   }
@@ -21,11 +21,13 @@ export class Line {
   }
   setDrawLine(cb: (start: pointData, end: pointData) => void) {
     this.drawLine = cb;
+    return this;
   }
 
   add(startNode: string, endNode: string) {
     let uuid = nanoid();
     this.lineMap.set(uuid, { startNode, endNode });
+    return uuid;
   }
 
   findByLine(lineID: string) {

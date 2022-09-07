@@ -78,26 +78,6 @@ export interface EngineConfig {
   historyLength?: number;
 }
 
-// export interface addAction {
-//   type: "add";
-//   timestamp: Date;
-//   id: string;
-//   node: any;
-// }
-
-// export interface updateAction {
-//   type: "update";
-//   timestamp: Date;
-//   id: string;
-//   properties: {
-//     [key in string]: any;
-//   };
-// }
-// export interface delAction {
-//   type: "del";
-//   timestamp: Date;
-//   id: string;
-// }
 export interface lineData {
   startNode: string;
   endNode: string;
